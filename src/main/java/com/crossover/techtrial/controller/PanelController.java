@@ -64,7 +64,7 @@ public class PanelController {
   
   @GetMapping(path = "/api/panels/{panel-serial}/hourly")
   public ResponseEntity<?> hourlyElectricity(
-      @PathVariable(value = "banel-serial") String panelSerial,
+      @PathVariable(value = "panel-serial") String panelSerial,
       @PageableDefault(size = 5,value = 0) Pageable pageable) {
     Panel panel = panelService.findBySerial(panelSerial);
     if (panel == null) {
@@ -82,14 +82,20 @@ public class PanelController {
    * @return
    */
   
-  @GetMapping(path = "/api/panels/{panel-serial}/daily")
-  public ResponseEntity<List<DailyElectricity>> allDailyElectricityFromYesterday(
-      @PathVariable(value = "panel-serial") String panelSerial) {
+  @GetMapping(path = "/api/panels/{panelId}/daily/{dayFrom}/{dayTo}/{year}")
+  public ResponseEntity<List<DailyElectricity>> allDailyElectricityFromToYear(
+		  @PathVariable(value = "panelId") Long panelId,
+		  @PathVariable(value = "dayFrom") int dayFrom,
+		  @PathVariable(value = "dayTo") int dayTo,
+		  @PathVariable(value = "year") int year,
+	      @PageableDefault(size = 5,value = 0) Pageable pageable) {
     List<DailyElectricity> dailyElectricityForPanel = new ArrayList<>();
     /**
      * IMPLEMENT THE LOGIC HERE and FEEL FREE TO MODIFY OR ADD CODE TO RELATED CLASSES.
      * MAKE SURE NOT TO CHANGE THE SIGNATURE OF ANY END POINT. NO PAGINATION IS NEEDED HERE.
      */
+    
+    hourlyElectricityService.getDaylyElectricityByPanelId(panelId, pageable, dayFrom, dayTo, year);
     return ResponseEntity.ok(dailyElectricityForPanel);
   }
 }
